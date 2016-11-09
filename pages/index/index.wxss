@@ -17,7 +17,7 @@
   width: 98vw;
   height:44vh;
   margin: 1vh 1vw;
-  padding: 1vh 0;
+  padding: 1vh 1.4vw;
   border:1px solid #353535;
   box-sizing:border-box;
   border-radius:4px;

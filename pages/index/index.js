@@ -153,46 +153,44 @@ Page({
     for(var index in lines){
       optlines.unshift(lines[index]);
     }
-    //console.log(optlines);
     var res = 0;
-    var a = parseInt(optlines.shift());
-    //console.log(a);
+    var a = parseFloat(optlines.shift());
     if(isNaN(a)){
       res = optlines.shift();
       if(isNaN(res)){
-        console.log('error');
+        //console.log('error');
       }
     }else{
       var b = optlines.shift();
       if(isNaN(b) && b != this.data.line){
-        //var c = 1*optlines.shift();
-        var c = 1*this.data.tmpRes;
+        var c = parseFloat(this.data.tmpRes);
         if(isNaN(c)){
-          console.log('error');
+          //console.log('error');
         }
         switch(b){
           case '÷':
             if(a != 0){
-              res = c/a;
+              res = util.floatDiv(c,a);
             }else{
-              console.log('error');
+              //console.log('error');
             }
             break;
           case '×':
-              res = c*a;
+              res = util.floatMul(c,a);
             break;
           case '+':
-              res = c+a;
+              res = util.floatAdd(c,a);
             break;
           case '-':
-              res = c-a;
+              res = util.floatSub(c,a);
             break;
         }
       }else{
         res = a;
-        console.log('error');
+        //console.log('error');
       }
     }
+    res = parseFloat(res);
     this.setTmpRes(res);
     return res;
   },
@@ -203,7 +201,6 @@ Page({
   },
   bindViewTapInput:function (e){
     var content = e.currentTarget.id;
-    //console.log(content);
     this.getNumber(content);
   },
   bindViewTapOpt:function (e){
@@ -238,12 +235,30 @@ Page({
   getNumber:function(content){
     var lines = this.data.lines;
     var move = false;
-    var old =  lines[(lines.length-1)]; 
+    var old =  lines[(lines.length-1)].toString(); 
     var newNum;
-    if(isNaN(old) || old ==0){
+    if(content=="." && old.indexOf(".")!=-1){
+    //当原字符串有小数点时再输入小数点无反应
+        return false;
+    }
+    if(content=="0" && old=="0"){
+    //当原字符串等于0再输入0无反应
+        return false;
+    }
+    if(isNaN(old) && old != "0."){
+    //当原字符串是非数字即操作符(+-×÷)时新字符串另起一行为新数字
+    //需要排除 0.  这个不是字符,但是需要继续拼接
+      if(content=="."){
+        content = "0.";
+      }
       newNum = content;
+      //另起一行的标志
       move = true;
     }else{
+      if(old == "0" && content != "."){
+        //当原字符串是0的时候又不是小数,需要把0去掉
+        old = "";
+      }
       newNum = old+content;
     }
     this.output([newNum],move);
