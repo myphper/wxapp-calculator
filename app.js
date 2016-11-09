@@ -7,6 +7,8 @@ App({
 
   },
   globalData:{
-    userInfo:null
+    userInfo:null,
+    screenHeight:100,
+    screenWidth:100
   }
 })

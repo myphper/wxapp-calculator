@@ -1,17 +1,37 @@
-.rows,.show{
-  width: 100%;
+.keyboard{
+  width: 100vw;
 }
-
-.show button{
-  height: 160px;
-  margin: 20px 1% 30px 1%;
+.key-rows{ 
+  display:flex;
+  width: 100vw;
 }
-
-.rows button{
-  width: 23%;
-  display: inline-block;
+.key{
+  width: 25vw;
 }
-
-.rows button{
-  margin: 2% 1%;
+.key button{
+  margin: 1vh 1vw;
+  height:8.6vh;
+  line-height:8.6vh;
+}
+.screen{
+  width: 98vw;
+  height:44vh;
+  margin: 1vh 1vw;
+  padding: 1vh 0;
+  border:1px solid #353535;
+  box-sizing:border-box;
+  border-radius:4px;
+}
+.screen button{
+  text-align:right;
+  margin: 0;
+  line-height:8vh;
+  height:8vh;
+  border:none;
+  color: gainsboro;
+  font-size:7vw; 
+}
+.screen .current{
+  color: black;
+  font-size:12vw; 
 }

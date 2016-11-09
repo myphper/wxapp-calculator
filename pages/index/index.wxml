@@ -1,36 +1,21 @@
 <!--index.wxml-->
 <view class="container">
-    <view class="show">
-      <button plain="true">{{content}}</button>
+
+    <!-- screen -->
+    <view class="screen">
+        <view plain="true" wx:for-items="{{lines}}" wx:for-index="idx" wx:for-item="line" wx:key="unique">
+            <button wx:if="{{idx == 4}}" class="current" plain="true">{{line}}</button>
+            <button wx:else plain="true">{{line}}</button>
+        </view>
     </view>
-    <view class="rows">
-        <button bindtap="bindViewTapOpt" id="of" type="warn">ON/OFF</button>
-        <button bindtap="bindViewTapOpt" id="t" type="warn">Time</button>
-        <button bindtap="bindViewTapOpt" id="c"  type="warn">C</button>
-        <button bindtap="bindViewTapOpt" id="ac"  type="warn">AC</button>
+
+    <!-- keyboard -->
+    <view class="keyboard">
+        <view class="key-rows" wx:for-items="{{layout}}" wx:for-item="itemName" wx:key="unique">
+            <view class="key" wx:for-items="{{itemName}}" wx:for-index="id" wx:for-item="keyInfo" wx:key="unique">
+                <button bindtap="{{keyInfo.opt}}" id="{{keyInfo.id}}" type="{{keyInfo.type}}">{{keyInfo.value}}</button>
+            </view>
+        </view>
     </view>
-    <view class="rows">
-        <button bindtap="bindViewTapInput" id="7">7</button>
-        <button bindtap="bindViewTapInput" id="8">8</button>
-        <button bindtap="bindViewTapInput" id="9">9</button>
-        <button bindtap="bindViewTapOpt" id="÷" type="primary">÷</button>
-    </view>
-    <view class="rows">
-        <button bindtap="bindViewTapInput" id="4">4</button>
-        <button bindtap="bindViewTapInput" id="5">5</button>
-        <button bindtap="bindViewTapInput" id="6">6</button>
-        <button bindtap="bindViewTapOpt" id="x" type="primary">x</button>
-    </view>
-        <view class="rows">
-        <button bindtap="bindViewTapInput" id="1">1</button>
-        <button bindtap="bindViewTapInput" id="2">2</button>
-        <button bindtap="bindViewTapInput" id="3">3</button>
-        <button bindtap="bindViewTapOpt" id="-" type="primary">-</button>
-    </view>
-    <view class="rows">
-        <button bindtap="bindViewTapInput" id="0">0</button>
-        <button bindtap="bindViewTapInput" id=".">.</button>
-        <button bindtap="bindViewTapOpt" id="=" type="warn">=</button>
-        <button bindtap="bindViewTapOpt" id="+" type="primary">+</button>
-    </view>
+
 </view>
