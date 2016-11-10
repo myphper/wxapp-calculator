@@ -1,6 +1,8 @@
 //index.js
 var app = getApp()
 var util = require('../../utils/util.js'); 
+var calc = require('../../utils/calc.js'); 
+var core = require('../../utils/core.js'); 
 Page({
   data: {
     layout:[
@@ -13,8 +15,8 @@ Page({
     {
 	    opt:"bindViewTapOpt",
 	    type:"warn",
-	    id:"t",
-	    value:"Time",
+	    id:"s",
+	    value:"高级",
     },
     {
 	    opt:"bindViewTapOpt",
@@ -125,79 +127,59 @@ Page({
 	    value:"+",
     }]],
     lines: [
-      123,
-      "+",
-      34,
       "",
-      157
+      "",
+      "",
+      "",
+      0
     ],
     power:1,
     line:"------------------------------------------------",
-    tmpRes:0
+    infix:"0"
   },
   onLoad: function () {
+    //core.showToast();
+    //core.showModal();
+    //core.showActionSheet();
     this.clear();
+    wx.setNavigationBarTitle({
+      title: '微信计算器'
+    })
+  },
+  onReady: function() {
+    wx.showNavigationBarLoading();
+    wx.hideNavigationBarLoading();
+    
+  },
+  onShow: function() {
+    // Do something when page ready.
+  },
+  onHide: function() {
+    // Do something when page hide.
+  },
+  onUnload: function() {
+    // Do something when page close.
+  },
+  onPullDownRefresh: function() {
+    // Do something when pull down.
+  },
+  onReachBottom: function() {
+    // Do something when page reach bottom.
   },
   clear:function(){
-    this.output(["","","","",0],true);
+    this.output([0]);
   },
   clearAll:function(){
     this.output(["","","","",0],true);
     this.setData({
-      tmpRes: 0,
+      infix: "",
     });
   },
   calculator:function(){
-    var lines = this.data.lines;
-    var optlines = [];
-    for(var index in lines){
-      optlines.unshift(lines[index]);
-    }
-    var res = 0;
-    var a = parseFloat(optlines.shift());
-    if(isNaN(a)){
-      res = optlines.shift();
-      if(isNaN(res)){
-        //console.log('error');
-      }
-    }else{
-      var b = optlines.shift();
-      if(isNaN(b) && b != this.data.line){
-        var c = parseFloat(this.data.tmpRes);
-        if(isNaN(c)){
-          //console.log('error');
-        }
-        switch(b){
-          case '÷':
-            if(a != 0){
-              res = util.floatDiv(c,a);
-            }else{
-              //console.log('error');
-            }
-            break;
-          case '×':
-              res = util.floatMul(c,a);
-            break;
-          case '+':
-              res = util.floatAdd(c,a);
-            break;
-          case '-':
-              res = util.floatSub(c,a);
-            break;
-        }
-      }else{
-        res = a;
-        //console.log('error');
-      }
-    }
-    res = parseFloat(res);
-    this.setTmpRes(res);
+    var infix = this.data.infix; 
+    var res = calc.calculate(infix);
+    this.makeInfix("0",true);
     return res;
-  },
-  setTmpRes:function(content){
-    this.setData({
-      tmpRes:content
-    });
   },
   bindViewTapInput:function (e){
     var content = e.currentTarget.id;
@@ -210,8 +192,10 @@ Page({
       case 'c':
           this.clear();
           break;
-      case 't':
-          this.output(util.formatTime(new Date()));
+      case 's':
+          wx.navigateTo({
+             url: '/pages/super/index?id=1'
+          })
           break;
       case 'of':
           this.setData({
@@ -223,14 +207,31 @@ Page({
           this.clearAll();
           break;
       case '=':
+          this.makeInfix();
           var res = this.calculator();
           this.output([this.data.line,res],true);
           break;
       default:
-          var res = this.calculator();
+          this.makeInfix(content);
           this.output([content],true);
           break;
     }
+  },
+  makeInfix:function(content,flash){
+    //生成中缀表达式
+    content = content ? content : ""; 
+    var oldInfix = this.data.infix.toString();
+    var lastNum = this.data.lines[(this.data.lines.length-1)].toString();
+    if(oldInfix == "0"){
+      oldInfix = "";
+    }
+    if(!flash){
+        content = oldInfix+lastNum+content;
+    }
+    console.log(content);
+    this.setData({
+      infix:content
+    }); 
   },
   getNumber:function(content){
     var lines = this.data.lines;
